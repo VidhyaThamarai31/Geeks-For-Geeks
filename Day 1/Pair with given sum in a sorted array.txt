@@ -1,0 +1,128 @@
+Day:1
+
+
+You are given an integer k and an array arr[]. You have to find numbers of pairs in array arr[] which sums up to k. It is given that the elements of the array arr[] are distinct and in sorted order.
+Note: pair {a, b} and pair {b, a} are considered the same. Also, an element cannot pair with itself, i.e., pair {a, a} is invalid.
+
+Examples :
+
+Input: k = 8, arr[] = [1, 2, 3, 4, 5, 6, 7]
+Output: 3
+Explanation: There are 3 pairs which sum up to 8 : {1, 7}, {2, 6}, {3, 5}
+Input: k = 98, arr[] = [1, 2, 3, 4, 5, 6, 7]
+Output: 0
+Explanation: There are no pairs which sum up to 98.
+Expected Time Complexity: O(n).
+Expected Auxiliary Space: O(1).
+
+Constraints:
+0 <= k <=107
+2 <= arr.size() <= 104
+0 <= arr[i] <= 107
+
+
+Solution:
+
+Optimized approach using HashMap:
+
+
+class Solution {
+
+    int countPair(int k, int arr[]) {
+        // Complete the function
+        int n=arr.length;
+        int res=0;
+        HashMap<Integer,Integer> freq=new HashMap<>();
+        for(int i=0;i<n;i++)
+        {
+            int com=k-arr[i];
+            if(com==arr[i])
+            {
+                if(freq.getOrDefault(com,0)==1)
+                res++;
+            }
+            else if(freq.getOrDefault(com,0)>0 && freq.getOrDefault(arr[i],0)==0)
+            {
+                res++;
+            }
+            
+            freq.put(arr[i],freq.getOrDefault(com,0)+1);
+        }
+        return res;
+    }
+}
+
+Using Two-Pointer approach:
+
+class Solution {
+
+    int countPair(int k, int arr[]) {
+        // Complete the function
+        int n=arr.length;
+        int res=0;
+        int left=0,right=n-1;
+        Arrays.sort(arr);
+        while(left<right)
+        {
+            if(arr[left]+arr[right]==k)
+            {
+                res++;
+            
+                while(left<right && arr[left]==arr[left+1])
+                left++;
+            
+                while(left<right && arr[right]==arr[right-1])
+                right--;
+            
+            left++;
+            right--;
+            }
+            else if(arr[left]+arr[right]<k)
+            left++;
+            else 
+            right--;
+        }
+        
+        return res;
+    }
+}
+
+Using Brute Force approach:
+
+class Solution {
+
+    int countPair(int k, int arr[]) {
+        // Complete the function
+        int n=arr.length;
+        ArrayList<int[]> res=new ArrayList<>();
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                if(arr[i]+arr[j]==k)
+                {
+                    int[] curr={arr[i],arr[j]};
+                
+                  Arrays.sort(curr);
+          
+            boolean isdistinct=true;
+            for(int []pair:res)
+            {
+                if(Arrays.equals(pair,curr))
+                {
+                    isdistinct=false;
+                    break;
+                }
+            }
+            if(isdistinct)
+            {
+                res.add(curr);
+            }
+                }
+            }
+        }
+        return res.size();
+    }
+}
+
+
